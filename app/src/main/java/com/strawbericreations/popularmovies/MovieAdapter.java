@@ -1,68 +1,107 @@
 package com.strawbericreations.popularmovies;
 
-import android.app.Activity;
+import android.content.ClipData;
 import android.content.Context;
-import android.text.Html;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
+
+import javax.security.auth.callback.Callback;
 
 /**
  * Created by redrose on 7/25/17.
  */
 public class MovieAdapter extends ArrayAdapter<Movie> {
 
-    private ArrayList<Movie> movieItemList= new ArrayList<Movie>();
-
+    private ArrayList<Movie> movieItemList = new ArrayList<Movie>();
     private Context mContext;
     private int layoutResourceId;
     private LayoutInflater inflater;
 
-    public MovieAdapter(Context mContext,int layoutResourceId, ArrayList<Movie> movieItemList) {
-        super(mContext,layoutResourceId, movieItemList);
+    public MovieAdapter(Context mContext, int layoutResourceId, ArrayList<Movie> movieItemList) {
+        super(mContext, layoutResourceId, movieItemList);
         this.movieItemList = movieItemList;
         this.mContext = mContext;
         this.layoutResourceId = layoutResourceId;
+        inflater = (LayoutInflater) mContext
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void setGridData(ArrayList<Movie> movieItemList) {
-        this.movieItemList = movieItemList;
+
+  /*  public void setGridData(ArrayList<Movie> movieItemList) {
+    this.movieItemList = movieItemList;
         notifyDataSetChanged();
+
+    /*    this.movieItemList = movieItemList;
+        Log.i("MovieListItem",movieItemList.toString());
+        Movie movieitem = new Movie();
+        for(int i=0;i<movieItemList.size();i++) {
+            movieitem.setImage(movieItemList.get(i).toString());
+            movieitem.setTitle(movieItemList.get(i).toString());
+        }
+        Log.i("dataaaa",movieItemList.toString());
+
+
     }
+    */
+
+
+    @Override
+    public int getCount() {
+        return movieItemList.size();
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
         ViewHolder holder;
-        if(row==null){
-            LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
+        Log.i("getview", "getview");
+        if (row == null) {
+            //  inflater = ((Activity) mContext).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
             holder = new ViewHolder();
-            holder.titleView = row.findViewById(R.id.text_view);
-            holder.imageView =  row.findViewById(R.id.image_item);
+            holder.titleView = (TextView) row.findViewById(R.id.text_view);
+            holder.imageView = (ImageView) row.findViewById(R.id.image_item);
             row.setTag(holder);
-        }
-        else {
+        } else {
             holder = (ViewHolder) row.getTag();
         }
         Movie item = movieItemList.get(position);
-        Log.i("Movie", item.toString());
-        holder.titleView.setText(item.getTitle());
-       // holder.titleView.setText(Html.fromHtml(item.getTitle()));
-        Picasso.with(mContext).load(item.getImage()).into(holder.imageView);
-    //    Picasso.with(mContext).load("https://image.tmdb.org/t/p/w185" + item.getImage()).into(holder.imageView);
+        String iurl = item.getImage();
+        Log.i("Imageis", iurl);
+        Log.i("Movie in Adapter", item.toString());
+        //    holder.titleView.setText(item.getTitle());
 
+
+        Picasso.with(mContext).load("http://image.tmdb.org/t/p/w92/" + movieItemList.get(position)
+                .getImage()).resize(320, 320).centerCrop().into(holder.imageView);
+
+
+        //  Picasso.with(mContext).setLoggingEnabled(true);
+        // Picasso.with(mContext).load(iurl).into(holder.imageView);
+        //  load(iurl)
+        // .centerCrop().fit().
+        // error(R.drawable.placeholder)
+        // .placeholder(R.drawable.placeholder).into(holder.imageView);
+        // holder.imageView.setImageURI(Uri.parse(item.getImage()));
         return row;
     }
 
-    static class ViewHolder {
+    private class ViewHolder {
         TextView titleView;
         ImageView imageView;
     }
+
+
 }

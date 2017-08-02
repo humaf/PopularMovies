@@ -1,11 +1,15 @@
 package com.strawbericreations.popularmovies;
 
+import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,9 +21,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 
-public class MainActivity extends AppCompatActivity {
+public class MovieActivity extends AppCompatActivity {
 
     private GridView mGridView;
     private ArrayList<Movie> mMovieItemList;
@@ -32,8 +37,38 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mGridView = (GridView)findViewById(R.id.grid_view);
         mMovieItemList = new ArrayList<>();
-        mMovieAdapter = new MovieAdapter(this,R.layout.grid_item,mMovieItemList);
-        mGridView.setAdapter(mMovieAdapter);
+     //   mMovieAdapter = new MovieAdapter(this,R.layout.grid_item,mMovieItemList);
+      //  mGridView.setAdapter(mMovieAdapter);
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                //Get item at position
+                Movie item = (Movie) parent.getItemAtPosition(position);
+
+                Intent intent = new Intent(MovieActivity.this, DetailsActivity.class);
+                ImageView imageView = (ImageView) v.findViewById(R.id.image_item);
+
+                // Interesting data to pass across are the thumbnail size/location, the
+                // resourceId of the source bitmap, the picture description, and the
+                // orientation (to avoid returning back to an obsolete configuration if
+                // the device rotates again in the meantime)
+
+                int[] screenLocation = new int[2];
+                imageView.getLocationOnScreen(screenLocation);
+
+                //Pass the image title and url to DetailsActivity
+                intent.putExtra("left", screenLocation[0]).
+                        putExtra("top", screenLocation[1]).
+                        putExtra("width", imageView.getWidth()).
+                        putExtra("height", imageView.getHeight()).
+                        putExtra("title", item.getTitle()).
+                        putExtra("image", item.getImage());
+
+                //Start details activity
+                startActivity(intent);
+            }
+        });
+
+
         MovieDownloads task = new MovieDownloads();
         task.execute(movieUrl);
     }
@@ -50,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
@@ -59,15 +93,14 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class MovieDownloads extends AsyncTask<String,Void,List<Movie>> {
+    public class MovieDownloads extends AsyncTask<String,Void,ArrayList<Movie>> {
 
         private ArrayList<Movie> movieList;
-        private  final String firstPartOfUrl =" http://image.tmdb.org/t/p/w185/";
+ //       private  final String firstPartOfUrl =" http://image.tmdb.org/t/p/w185/";
 
         @Override
-        protected List<Movie> doInBackground(String... urls) {
+        protected ArrayList<Movie> doInBackground(String... urls) {
             String result = "";
-
             URL url;
             HttpURLConnection urlConnection = null;
             try {
@@ -103,24 +136,31 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < results.length(); i++) {
                     JSONObject res = results.optJSONObject(i);
                     Movie item = new Movie();
-                    String s = firstPartOfUrl + (res.optString("poster_path"));
+                    String secondPartOfUrl = res.optString("poster_path");
+                    Log.i("server output,",secondPartOfUrl);
+                //    String movieimage = firstPartOfUrl + secondPartOfUrl;
                     String movietitle = (res.optString("title"));
-                    Log.i("Title",movietitle);
                     item.setTitle(movietitle);
-                    Log.i("Image url", s);
-                    item.setImage(s);
+                    item.setImage(res.optString("poster_path"));
+             //       item.setImage(movieimage);
+                    Log.i("Title",movietitle);
+              //      Log.i("Image url", movieimage);
+                    //   Log.i("fetch",item.setImage(s));
+                    Log.i("setting here", item.getImage());
                     movieList.add(item);
                     Log.i("movie", movieList.toString());
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
             return movieList;
         }
         @Override
-        protected void onPostExecute(List<Movie> result) {
-            mMovieAdapter.setGridData(movieList);
+        protected void onPostExecute(ArrayList<Movie> result) {
+            mMovieAdapter = new MovieAdapter(getApplicationContext(),R.layout.grid_item,result);
+            mGridView.setAdapter(mMovieAdapter);
+            Log.i("checking data", result.toString());
         }
     }
+
 }
