@@ -15,7 +15,7 @@ public class Movie implements Parcelable {
     private String overview;
     private String release_date;
     private Double popularity;
-    private Double vote_average;
+    private int vote_average;
     private int vote_count;
 
     public Movie(){
@@ -83,11 +83,11 @@ public class Movie implements Parcelable {
         this.popularity = popularity;
     }
 
-    public Double getVote_average() {
+    public int getVote_average() {
         return vote_average;
     }
 
-    public void setVote_average(Double vote_average) {
+    public void setVote_average(int vote_average) {
         this.vote_average = vote_average;
     }
 
@@ -117,7 +117,7 @@ public class Movie implements Parcelable {
         original_title = in.readString();
         image = in.readString();
         overview = in.readString();
-        vote_average = (Double)in.readValue(Double.class.getClassLoader());
+        vote_average = (Integer) in.readValue(Integer.class.getClassLoader());
         release_date  = in.readString();
     }
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {

@@ -21,7 +21,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 
 public class MovieActivity extends AppCompatActivity {
@@ -45,24 +44,13 @@ public class MovieActivity extends AppCompatActivity {
                 Movie item = (Movie) parent.getItemAtPosition(position);
 
                 Intent intent = new Intent(MovieActivity.this, DetailsActivity.class);
-                ImageView imageView = (ImageView) v.findViewById(R.id.image_item);
-
-                // Interesting data to pass across are the thumbnail size/location, the
-                // resourceId of the source bitmap, the picture description, and the
-                // orientation (to avoid returning back to an obsolete configuration if
-                // the device rotates again in the meantime)
-
-                int[] screenLocation = new int[2];
-                imageView.getLocationOnScreen(screenLocation);
 
                 //Pass the image title and url to DetailsActivity
-                intent.putExtra("left", screenLocation[0]).
-                        putExtra("top", screenLocation[1]).
-                        putExtra("width", imageView.getWidth()).
-                        putExtra("height", imageView.getHeight()).
-                        putExtra("title", item.getTitle()).
-                        putExtra("image", item.getImage());
-
+                intent.putExtra("title", item.getTitle())
+                       .putExtra("image", item.getImage())
+                        .putExtra("release_date",item.getRelease_date())
+                        .putExtra("vote_average",item.getVote_average())
+                        .putExtra("overview",item.getOverview());
                 //Start details activity
                 startActivity(intent);
             }
@@ -96,7 +84,6 @@ public class MovieActivity extends AppCompatActivity {
     public class MovieDownloads extends AsyncTask<String,Void,ArrayList<Movie>> {
 
         private ArrayList<Movie> movieList;
- //       private  final String firstPartOfUrl =" http://image.tmdb.org/t/p/w185/";
 
         @Override
         protected ArrayList<Movie> doInBackground(String... urls) {
@@ -136,13 +123,13 @@ public class MovieActivity extends AppCompatActivity {
                 for (int i = 0; i < results.length(); i++) {
                     JSONObject res = results.optJSONObject(i);
                     Movie item = new Movie();
-                    String secondPartOfUrl = res.optString("poster_path");
-                    Log.i("server output,",secondPartOfUrl);
-                //    String movieimage = firstPartOfUrl + secondPartOfUrl;
                     String movietitle = (res.optString("title"));
                     item.setTitle(movietitle);
                     item.setImage(res.optString("poster_path"));
-             //       item.setImage(movieimage);
+                    item.setRelease_date(res.optString("release_date"));
+                    item.setOriginal_title(res.optString("title"));
+                    item.setOverview(res.optString("overview"));
+                    item.setVote_average(res.getInt("vote_average"));
                     Log.i("Title",movietitle);
               //      Log.i("Image url", movieimage);
                     //   Log.i("fetch",item.setImage(s));
