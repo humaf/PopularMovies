@@ -91,7 +91,6 @@ public class Movie implements Parcelable {
         this.vote_average = vote_average;
     }
 
-
     public int getVote_count() {
         return vote_count;
     }

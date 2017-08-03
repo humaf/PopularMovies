@@ -28,7 +28,7 @@ public class MovieActivity extends AppCompatActivity {
     private GridView mGridView;
     private ArrayList<Movie> mMovieItemList;
     private MovieAdapter mMovieAdapter;
-    private String movieUrl = "http://api.themoviedb.org/3/movie/popular?api_key=34de1fb55076a771087c2c04d80637f2";
+    private String movieUrl = "http://api.themoviedb.org/3/movie/popular?api_key=your api key";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,9 +74,7 @@ public class MovieActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+
 
         return super.onOptionsItemSelected(item);
     }
