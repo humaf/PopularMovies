@@ -61,7 +61,7 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
         String iurl = item.getImage();
         Log.i("Imageis", iurl);
         Log.i("Movie in Adapter", item.toString());
-        //    holder.titleView.setText(item.getTitle());
+
 
 
         Picasso.with(mContext).load("http://image.tmdb.org/t/p/w92/" + movieItemList.get(position)

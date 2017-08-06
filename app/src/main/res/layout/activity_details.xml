@@ -26,7 +26,6 @@
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:orientation="vertical">
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,16 +33,17 @@
             android:textSize="20dp"
 
             />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/releaseDate"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/voteaverageTitle"
             android:textSize="20dp"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

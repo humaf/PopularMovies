@@ -79,12 +79,10 @@ public class MovieActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (item.getItemId()) {
             case R.id.popularity:
-              //  sortpop(popular);
                 MovieDownloads taskpop = new MovieDownloads();
                 taskpop.execute(Constants.API_URL_POP + Constants.API_KEY);
                 return true;
             case R.id.top_rated:
-               // sorttop(toprated);
                 MovieDownloads tasktop = new MovieDownloads();
                 tasktop.execute(Constants.API_URL_TOP + Constants.API_KEY);
                 return true;
@@ -163,16 +161,5 @@ public class MovieActivity extends AppCompatActivity {
         }
     }
 
-    public void sortpop(ArrayList<Movie> popular) {
-
-        MovieDownloads task = new MovieDownloads();
-        task.execute(Constants.API_URL_POP + Constants.API_URL_TOP);
-    }
-
-    public void sorttop(ArrayList<Movie> toprated) {
-
-        MovieDownloads task = new MovieDownloads();
-        task.execute(Constants.API_URL_TOP + Constants.API_URL_TOP);
-    }
 }
 

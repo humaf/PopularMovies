@@ -1,5 +1,6 @@
 package com.strawbericreations.popularmovies;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
@@ -22,6 +23,10 @@ public class DetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+
+        Intent intent = getIntent();
+        Movie movieIntent = (Movie) intent.getSerializableExtra("Movie");
+
         titleText = (TextView) findViewById(R.id.title);
         imageView = (ImageView) findViewById(R.id.grid_item_image);
         releasedateText = (TextView)findViewById(R.id.releaseTitle);
@@ -33,14 +38,15 @@ public class DetailsActivity extends AppCompatActivity {
         String image = getIntent().getStringExtra("image");
         String rdate = getIntent().getStringExtra("release_date");
         String  over_view = getIntent().getStringExtra("overview");
-        String averagevote = getIntent().getStringExtra("vote_average");
+       int averagevote = getIntent().getIntExtra("vote_average",0);
+        String avg =Integer.toString(averagevote);
+
         releasedateText.setText("Release Date");
         release_date.setText(rdate);
+        voteaverageText.setText("Average Vote");
         overview.setText(over_view);
-        voteaverageText.setText("Vote Average");
-        voteaverage.setText(averagevote);
+        voteaverage.setText(avg);
         titleText.setText(title);
-        //voteAverageText.setText("Voter Average: " + movieIntent.getVote_average());
 
         Picasso.with(this).load("http://image.tmdb.org/t/p/w92/" + image).resize(350,350)
                 .into(imageView);

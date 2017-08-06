@@ -2,7 +2,7 @@ package com.strawbericreations.popularmovies;
 
 
 import java.io.Serializable;
-import java.io.Serializable;
+
 
 /**
  * Created by redrose on 7/25/17.
@@ -99,9 +99,4 @@ public class Movie implements Serializable {
     public void setVote_count(int vote_count) {
         this.vote_count = vote_count;
     }
-
-
-
-
-
 }
