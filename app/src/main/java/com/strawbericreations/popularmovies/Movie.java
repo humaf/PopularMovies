@@ -1,12 +1,13 @@
 package com.strawbericreations.popularmovies;
 
-import android.os.Parcelable;
-import android.widget.ImageView;
-import android.os.Parcel;
+
+import java.io.Serializable;
+import java.io.Serializable;
+
 /**
  * Created by redrose on 7/25/17.
  */
-public class Movie implements Parcelable {
+public class Movie implements Serializable {
     private String image;
     private String title;
     private String backdrop_path;
@@ -99,33 +100,8 @@ public class Movie implements Parcelable {
         this.vote_count = vote_count;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
 
-    public void writeToParcel(Parcel dest, int flags){
-        dest.writeString(original_title);
-        dest.writeString(overview);
-        dest.writeString(release_date);
-      //  dest.writeString(vote_average);
-    }
 
-    private Movie(Parcel in){
-        original_title = in.readString();
-        image = in.readString();
-        overview = in.readString();
-        vote_average = (Integer) in.readValue(Integer.class.getClassLoader());
-        release_date  = in.readString();
-    }
-    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
-        public Movie createFromParcel(Parcel source) {
-            return new Movie(source);
-        }
 
-        public Movie[] newArray(int size) {
-            return new Movie[size];
-        }
-    };
 }

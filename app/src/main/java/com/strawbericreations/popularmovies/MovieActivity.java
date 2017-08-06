@@ -27,6 +27,9 @@ public class MovieActivity extends AppCompatActivity {
 
     private GridView mGridView;
     private ArrayList<Movie> mMovieItemList;
+    private ArrayList<Movie> popular;
+    private ArrayList<Movie> toprated;
+
     private MovieAdapter mMovieAdapter;
     private String movieUrl = "http://api.themoviedb.org/3/movie/popular?api_key=34de1fb55076a771087c2c04d80637f2";
 
@@ -34,8 +37,10 @@ public class MovieActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mGridView = (GridView)findViewById(R.id.grid_view);
+        mGridView = (GridView) findViewById(R.id.grid_view);
         mMovieItemList = new ArrayList<>();
+        popular = new ArrayList<>();
+        toprated = new ArrayList<>();
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 //Get item at position
@@ -45,10 +50,10 @@ public class MovieActivity extends AppCompatActivity {
 
                 //Pass the image title and url to DetailsActivity
                 intent.putExtra("title", item.getTitle())
-                       .putExtra("image", item.getImage())
-                        .putExtra("release_date",item.getRelease_date())
-                        .putExtra("vote_average",item.getVote_average())
-                        .putExtra("overview",item.getOverview());
+                        .putExtra("image", item.getImage())
+                        .putExtra("release_date", item.getRelease_date())
+                        .putExtra("vote_average", item.getVote_average())
+                        .putExtra("overview", item.getOverview());
                 //Start details activity
                 startActivity(intent);
             }
@@ -56,8 +61,9 @@ public class MovieActivity extends AppCompatActivity {
 
 
         MovieDownloads task = new MovieDownloads();
-        task.execute(movieUrl);
+        task.execute(Constants.API_URL_POP + Constants.API_KEY);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -71,13 +77,25 @@ public class MovieActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
+        switch (item.getItemId()) {
+            case R.id.popularity:
+              //  sortpop(popular);
+                MovieDownloads taskpop = new MovieDownloads();
+                taskpop.execute(Constants.API_URL_POP + Constants.API_KEY);
+                return true;
+            case R.id.top_rated:
+               // sorttop(toprated);
+                MovieDownloads tasktop = new MovieDownloads();
+                tasktop.execute(Constants.API_URL_TOP + Constants.API_KEY);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
 
 
-        return super.onOptionsItemSelected(item);
     }
 
-    public class MovieDownloads extends AsyncTask<String,Void,ArrayList<Movie>> {
+    public class MovieDownloads extends AsyncTask<String, Void, ArrayList<Movie>> {
 
         private ArrayList<Movie> movieList;
 
@@ -126,7 +144,7 @@ public class MovieActivity extends AppCompatActivity {
                     item.setOriginal_title(res.optString("title"));
                     item.setOverview(res.optString("overview"));
                     item.setVote_average(res.getInt("vote_average"));
-                    Log.i("Title",movietitle);
+                    Log.i("Title", movietitle);
                     Log.i("setting here", item.getImage());
                     movieList.add(item);
                     Log.i("movie", movieList.toString());
@@ -136,12 +154,25 @@ public class MovieActivity extends AppCompatActivity {
             }
             return movieList;
         }
+
         @Override
         protected void onPostExecute(ArrayList<Movie> result) {
-            mMovieAdapter = new MovieAdapter(getApplicationContext(),R.layout.grid_item,result);
+            mMovieAdapter = new MovieAdapter(getApplicationContext(), R.layout.grid_item, result);
             mGridView.setAdapter(mMovieAdapter);
             Log.i("checking data", result.toString());
         }
     }
 
+    public void sortpop(ArrayList<Movie> popular) {
+
+        MovieDownloads task = new MovieDownloads();
+        task.execute(Constants.API_URL_POP + Constants.API_URL_TOP);
+    }
+
+    public void sorttop(ArrayList<Movie> toprated) {
+
+        MovieDownloads task = new MovieDownloads();
+        task.execute(Constants.API_URL_TOP + Constants.API_URL_TOP);
+    }
 }
+
