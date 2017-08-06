@@ -28,7 +28,7 @@ public class MovieActivity extends AppCompatActivity {
     private GridView mGridView;
     private ArrayList<Movie> mMovieItemList;
     private MovieAdapter mMovieAdapter;
-    private String movieUrl = "http://api.themoviedb.org/3/movie/popular?api_key=your api key";
+    private String movieUrl = "http://api.themoviedb.org/3/movie/popular?api_key=34de1fb55076a771087c2c04d80637f2";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +36,6 @@ public class MovieActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mGridView = (GridView)findViewById(R.id.grid_view);
         mMovieItemList = new ArrayList<>();
-     //   mMovieAdapter = new MovieAdapter(this,R.layout.grid_item,mMovieItemList);
-      //  mGridView.setAdapter(mMovieAdapter);
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 //Get item at position
@@ -129,8 +127,6 @@ public class MovieActivity extends AppCompatActivity {
                     item.setOverview(res.optString("overview"));
                     item.setVote_average(res.getInt("vote_average"));
                     Log.i("Title",movietitle);
-              //      Log.i("Image url", movieimage);
-                    //   Log.i("fetch",item.setImage(s));
                     Log.i("setting here", item.getImage());
                     movieList.add(item);
                     Log.i("movie", movieList.toString());

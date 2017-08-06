@@ -39,23 +39,6 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
     }
 
 
-  /*  public void setGridData(ArrayList<Movie> movieItemList) {
-    this.movieItemList = movieItemList;
-        notifyDataSetChanged();
-
-    /*    this.movieItemList = movieItemList;
-        Log.i("MovieListItem",movieItemList.toString());
-        Movie movieitem = new Movie();
-        for(int i=0;i<movieItemList.size();i++) {
-            movieitem.setImage(movieItemList.get(i).toString());
-            movieitem.setTitle(movieItemList.get(i).toString());
-        }
-        Log.i("dataaaa",movieItemList.toString());
-
-
-    }
-    */
-
 
     @Override
     public int getCount() {
@@ -85,16 +68,9 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
 
 
         Picasso.with(mContext).load("http://image.tmdb.org/t/p/w92/" + movieItemList.get(position)
-                .getImage()).resize(320, 320).centerCrop().into(holder.imageView);
+                .getImage()).resize(320, 500).into(holder.imageView);
 
 
-        //  Picasso.with(mContext).setLoggingEnabled(true);
-        // Picasso.with(mContext).load(iurl).into(holder.imageView);
-        //  load(iurl)
-        // .centerCrop().fit().
-        // error(R.drawable.placeholder)
-        // .placeholder(R.drawable.placeholder).into(holder.imageView);
-        // holder.imageView.setImageURI(Uri.parse(item.getImage()));
         return row;
     }
 
