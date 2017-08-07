@@ -2,19 +2,16 @@ package com.strawbericreations.popularmovies;
 
 
 import android.content.Context;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
-import javax.security.auth.callback.Callback;
 
 /**
  * Created by redrose on 7/25/17.
