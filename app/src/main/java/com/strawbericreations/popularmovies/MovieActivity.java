@@ -26,21 +26,16 @@ import android.widget.ImageView;
 public class MovieActivity extends AppCompatActivity {
 
     private GridView mGridView;
-    private ArrayList<Movie> mMovieItemList;
-    private ArrayList<Movie> popular;
-    private ArrayList<Movie> toprated;
 
     private MovieAdapter mMovieAdapter;
-    private String movieUrl = "http://api.themoviedb.org/3/movie/popular?api_key=34de1fb55076a771087c2c04d80637f2";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mGridView = (GridView) findViewById(R.id.grid_view);
-        mMovieItemList = new ArrayList<>();
-        popular = new ArrayList<>();
-        toprated = new ArrayList<>();
+
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 //Get item at position
@@ -58,7 +53,6 @@ public class MovieActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
 
         MovieDownloads task = new MovieDownloads();
         task.execute(Constants.API_URL_POP + Constants.API_KEY);

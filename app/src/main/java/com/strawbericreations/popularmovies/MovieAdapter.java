@@ -1,14 +1,13 @@
 package com.strawbericreations.popularmovies;
 
-import android.content.ClipData;
+
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -46,7 +45,7 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
         ViewHolder holder;
         Log.i("getview", "getview");
         if (row == null) {
-            //  inflater = ((Activity) mContext).getLayoutInflater();
+
             row = inflater.inflate(layoutResourceId, parent, false);
             holder = new ViewHolder();
             holder.titleView = (TextView) row.findViewById(R.id.text_view);
@@ -60,10 +59,9 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
         Log.i("Imageis", iurl);
         Log.i("Movie in Adapter", item.toString());
 
-
-
         Picasso.with(mContext).load("http://image.tmdb.org/t/p/w92/" + movieItemList.get(position)
-                .getImage()).resize(320, 500).into(holder.imageView);
+                .getImage()).resize(320, 500).placeholder(R.drawable.placeholder).
+                into(holder.imageView);
 
 
         return row;
