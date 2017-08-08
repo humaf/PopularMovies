@@ -1,6 +1,9 @@
 package com.strawbericreations.popularmovies;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -22,6 +25,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class MovieActivity extends AppCompatActivity {
 
@@ -35,6 +39,8 @@ public class MovieActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mGridView = (GridView) findViewById(R.id.grid_view);
+        Toast networkerror = Toast.makeText(this, "please connect to the INTERNET", Toast.LENGTH_LONG);
+
 
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
@@ -54,10 +60,14 @@ public class MovieActivity extends AppCompatActivity {
             }
         });
 
-        MovieDownloads task = new MovieDownloads();
-        task.execute(Constants.API_URL_POP + Constants.API_KEY);
-    }
+        if (!isNetworkAvailable(this) == false) {
 
+            MovieDownloads task = new MovieDownloads();
+            task.execute(Constants.API_URL_POP + Constants.API_KEY);
+        }
+        else
+            networkerror.show();
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -83,8 +93,21 @@ public class MovieActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
 
 
+    public Boolean isNetworkAvailable(Context context){
+
+        Boolean resultValue = false; // Initial Value
+
+        ConnectivityManager manager = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()){
+            resultValue = true;
+        }
+
+        return resultValue;
     }
 
     public class MovieDownloads extends AsyncTask<String, Void, ArrayList<Movie>> {
