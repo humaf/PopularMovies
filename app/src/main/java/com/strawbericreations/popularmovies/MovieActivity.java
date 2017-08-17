@@ -54,6 +54,7 @@ public class MovieActivity extends AppCompatActivity {
                         .putExtra("image", item.getImage())
                         .putExtra("release_date", item.getRelease_date())
                         .putExtra("vote_average", item.getVote_average())
+                        .putExtra("id",item.getId())
                         .putExtra("overview", item.getOverview());
                 //Start details activity
                 startActivity(intent);
@@ -81,18 +82,9 @@ public class MovieActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        switch (item.getItemId()) {
-            case R.id.popularity:
-                MovieDownloads taskpop = new MovieDownloads();
-                taskpop.execute(Constants.API_URL_POP + Constants.API_KEY);
-                return true;
-            case R.id.top_rated:
-                MovieDownloads tasktop = new MovieDownloads();
-                tasktop.execute(Constants.API_URL_TOP + Constants.API_KEY);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+
+        return super.onOptionsItemSelected(item);
+
     }
 
 
@@ -154,11 +146,14 @@ public class MovieActivity extends AppCompatActivity {
                     Movie item = new Movie();
                     String movietitle = (res.optString("title"));
                     item.setTitle(movietitle);
+                    item.setId(res.getInt("id"));
                     item.setImage(res.optString("poster_path"));
                     item.setRelease_date(res.optString("release_date"));
                     item.setOriginal_title(res.optString("title"));
                     item.setOverview(res.optString("overview"));
                     item.setVote_average(res.getInt("vote_average"));
+                    String check = Integer.toString(res.getInt("id"));
+                  Log.i("ID value generated",check);
                     Log.i("Title", movietitle);
                     Log.i("setting here", item.getImage());
                     movieList.add(item);
