@@ -90,8 +90,10 @@ public class DetailsActivity extends AppCompatActivity {
 
         Picasso.with(this).load("http://image.tmdb.org/t/p/w92/" + image).resize(350,350)
                 .into(imageView);
-        layoutManager = new LinearLayoutManager(this);
-     mRecyclerView.setLayoutManager(layoutManager);
+    
+
+     LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.HORIZONTAL, false);
+     mRecyclerView.setLayoutManager(horizontalLayoutManager);
      mRecyclerView.addOnItemTouchListener(new RecyclerClickListener(getApplicationContext(), new RecyclerClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
