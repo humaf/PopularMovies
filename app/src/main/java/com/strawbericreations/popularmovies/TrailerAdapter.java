@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 import java.util.List;
-import static android.R.attr.data;
+
 
 /**
  * Created by redrose on 8/13/17.
@@ -18,7 +18,6 @@ public class TrailerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private List<Trailers> trailersList;
     private Context mContext;
-    private OnItemClickListener onItemClickListener;
 
 
     public TrailerAdapter(Context mContext,List<Trailers> trailersList){
@@ -34,7 +33,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-    //   Trailers trailer = trailersList.get(i);
+
         String id = trailersList.get(position).getKey();
         String thumbnailURL = "http://img.youtube.com/vi/".concat(id).concat("/hqdefault.jpg");
         //Render image using Picasso library
@@ -47,15 +46,6 @@ public class TrailerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return trailersList.size();
     }
 
-
-
-    public OnItemClickListener getOnItemClickListener() {
-        return onItemClickListener;
-    }
-
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
-    }
 }
 
 class TrailerViewHolder extends RecyclerView.ViewHolder{

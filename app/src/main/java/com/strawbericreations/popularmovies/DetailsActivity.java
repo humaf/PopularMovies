@@ -42,18 +42,19 @@ public class DetailsActivity extends AppCompatActivity {
     private TextView voteaverage;
     private TextView overview;
     private RecyclerView mRecyclerView;
+    private ReviewAdapter reviewAdapter;
     private TrailerAdapter mTrailerAdapter;
     private LinearLayoutManager layoutManager;
+    private LinearLayoutManager reviewlayoutManager;
     private TextView trailerText;
     private Trailers trailers;
     private ArrayList<Trailers> trailersList;
+    private ArrayList<Reviews> reviewsList;
     private String trailerurl="";
     private ArrayList<String> trailerAddress;
-    private OnItemClickListener onItemClickListener;
+    private RecyclerView reviewRecyclerView;
 
-
-
-    @Override
+ @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
@@ -62,6 +63,7 @@ public class DetailsActivity extends AppCompatActivity {
         Movie movieIntent = (Movie) intent.getSerializableExtra("Movie");
 
         mRecyclerView = (RecyclerView)findViewById(R.id.trailerview);
+        reviewRecyclerView = (RecyclerView)findViewById(R.id.reviview);
         titleText = (TextView) findViewById(R.id.title);
         imageView = (ImageView) findViewById(R.id.grid_item_image);
         releasedateText = (TextView)findViewById(R.id.releaseTitle);
@@ -89,12 +91,33 @@ public class DetailsActivity extends AppCompatActivity {
         Picasso.with(this).load("http://image.tmdb.org/t/p/w92/" + image).resize(350,350)
                 .into(imageView);
         layoutManager = new LinearLayoutManager(this);
-     //   layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        mRecyclerView.setLayoutManager(layoutManager);
+     mRecyclerView.setLayoutManager(layoutManager);
+     mRecyclerView.addOnItemTouchListener(new RecyclerClickListener(getApplicationContext(), new RecyclerClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                String url = "https://www.youtube.com/watch?v=".concat(trailersList.get(position).getKey());
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
 
-        DownloadTrailer task = new DownloadTrailer();
-        task.execute(Constants.API_URL_TRAILERS + identifier  + "/videos?api_key=" + Constants.API_KEY);
-    }
+        }));
+
+
+     DownloadTrailer tasktrailer = new DownloadTrailer();
+
+     tasktrailer.execute(Constants.API_URL_TRAILERS + identifier  + "/videos?api_key=" + Constants.API_KEY);
+
+
+     reviewlayoutManager = new LinearLayoutManager(this);
+     reviewRecyclerView.setLayoutManager(reviewlayoutManager);
+
+
+        DownloadReview taskreview = new DownloadReview();
+
+        taskreview.execute(Constants.API_URL_REVIEWS + identifier  + "/reviews?api_key=" + Constants.API_KEY);
+
+ }
     public class DownloadTrailer extends AsyncTask<String,Void,ArrayList<Trailers>> {
 
         private ArrayList<String> u;
@@ -155,15 +178,63 @@ public class DetailsActivity extends AppCompatActivity {
            mTrailerAdapter = new TrailerAdapter(DetailsActivity.this, result)  ;
             mRecyclerView.setAdapter(mTrailerAdapter);
 
-           mTrailerAdapter.setOnItemClickListener(new OnItemClickListener() {
-                @Override
-                public void onItemClick(Trailers item,int position) {
-                    Intent viewIntent =
-                            new Intent("android.intent.action.VIEW",
-                                    Uri.parse(u.get(position)));
-                    startActivity(viewIntent);
+        }
+    }
+
+    public class DownloadReview extends AsyncTask<String,Void,ArrayList<Reviews>> {
+
+        private ArrayList<String> u;
+        protected ArrayList<Reviews> doInBackground(String ...urls){
+            String result = "";
+            URL url;
+            HttpURLConnection urlConnection = null;
+            try {
+                url = new URL(urls[0]);
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                InputStream in = urlConnection.getInputStream();
+
+                InputStreamReader reader = new InputStreamReader(in);
+
+                int data = reader.read();
+
+                while (data != -1) {
+
+                    char current = (char) data;
+
+                    result += current;
+
+                    data = reader.read();
+
                 }
-            });
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                JSONObject response = new JSONObject(result);
+                JSONArray results = response.optJSONArray("results");
+                reviewsList = new ArrayList<Reviews>();
+                for (int i = 0; i < results.length(); i++) {
+                    JSONObject res = results.optJSONObject(i);
+                    Reviews item = new Reviews();
+                    item.setAuthor(res.optString("author"));
+                    item.setContent(res.optString("content"));
+                    reviewsList.add(item);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return reviewsList;
+        }
+        @Override
+        protected void onPostExecute(ArrayList<Reviews> result) {
+            reviewAdapter = new ReviewAdapter(DetailsActivity.this, result)  ;
+          reviewRecyclerView.setAdapter(reviewAdapter);
         }
     }
 }

@@ -9,4 +9,5 @@ public class Constants {
     static String API_URL_POP="http://api.themoviedb.org/3/movie/popular?api_key=";
     static String API_URL_TOP="http://api.themoviedb.org/3/movie/top_rated?api__key=";
     static String API_URL_TRAILERS="https://api.themoviedb.org/3/movie/";
+    static String API_URL_REVIEWS="https://api.themoviedb.org/3/movie/";
 }

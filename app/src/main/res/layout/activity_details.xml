@@ -66,10 +66,6 @@
         </LinearLayout>
     </LinearLayout>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -94,9 +90,18 @@
                 android:layout_height="wrap_content" />
 
         </LinearLayout>
-    </ScrollView>
 
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Trailers"
+        android:id="@+id/trailerTitle"
+        android:background="#00000c"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:textColor="#fff"
+        android:textSize="20dp"
+        />
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -104,24 +109,42 @@
         android:orientation="vertical"
         android:padding="16dp"
        >
-        <TextView
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/trailerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Trailers"
-            android:id="@+id/trailerTitle"
-            android:background="#00000c"
-            android:padding="10dp"
-            android:textColor="#fff"
-            android:textSize="20dp"
-            />
-        <android.support.v7.widget.RecyclerView
-            android:padding="16dp"
-            android:id="@+id/trailerview"
-            android:layout_width="wrap_content"
-            android:layout_height="200dp"
-            android:orientation="horizontal"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
+           />
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reviews"
+        android:id="@+id/reviewTitle"
+        android:background="#00000c"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:textColor="#fff"
+        android:textSize="20dp"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:padding="16dp"
+        >
+
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/reviview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+
 
 </LinearLayout>
 
