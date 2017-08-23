@@ -83,7 +83,18 @@ public class MovieActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.action_sort_by_popularity:
+                MovieDownloads taskpop = new MovieDownloads();
+                taskpop.execute(Constants.API_URL_POP + Constants.API_KEY);
+                return true;
+            case R.id.action_sort_by_rating:
+                MovieDownloads tasktop = new MovieDownloads();
+                tasktop.execute(Constants.API_URL_TOP + Constants.API_KEY);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
 
     }
 
