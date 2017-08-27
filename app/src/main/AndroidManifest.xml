@@ -21,6 +21,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".DetailsActivity" />
+        <provider
+            android:authorities="com.strawbericreations.popularmovies"
+            android:name=".FavouritesProvider"
+            android:multiprocess="true"
+            android:enabled="true"
+            android:exported="true"
+            >
+        </provider>
     </application>
 
 </manifest>

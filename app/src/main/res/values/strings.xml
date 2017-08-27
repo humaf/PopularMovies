@@ -6,4 +6,7 @@
     <string name="pref_sortmovie_popular_value">Popular</string>
     <string name="pref_sortmovie_toprated_value">Top Rated</string>
     <string name="pref_sortmovie_favourites_value">Favourites</string>
+    <string name="op_failed_msg">Operations Failed</string>
+    <string name="movie_added">Successfully added movie to favorites</string>
+    <string name="movie_removed">Successfully removed movie from favorites</string>
 </resources>

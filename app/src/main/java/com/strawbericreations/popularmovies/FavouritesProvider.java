@@ -3,12 +3,17 @@ package com.strawbericreations.popularmovies;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import android.util.Log;
 
 /**
  * Created by redrose on 8/22/17.
@@ -16,166 +21,167 @@ import android.support.annotation.Nullable;
 
 public class FavouritesProvider extends ContentProvider {
 
-    private static final String LOG_TAG = FavouritesProvider.class.getSimpleName();
+    static final String TAG = FavouritesProvider.class.getSimpleName();
+
+    //To query content provider, we should specify the query string in the form of a URI of the below format
+    // <prefix>://<authority>/<data_type>/<id>
+    // <prefix> is always set to content://
+    // authority specifies the name of the content provider. For third party content providers this should be fully qualified name
+    // data_type indicates the particular data the provider provides.
+
+    static final String PROVIDER_NAME = "com.strawbericreations.popularmovies.FavouritesProvider";
+    static final String URL = "content://" + PROVIDER_NAME + "/favorites";
+    static final Uri CONTENT_URI = Uri.parse(URL);
+
+    static final int FAVORITES = 1;
+    static final int FAVORITES_ID = 2;
+
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private FavouritesDBHelper mOpenHelper;
 
+    private static UriMatcher buildUriMatcher() {
 
-    private static final int FAVOURITE= 100;
-    private static final int FAVOURITE_WITH_ID = 200;
-
-
-    private static UriMatcher buildUriMatcher(){
-        // Build a UriMatcher by adding a specific code to return based on a match
-        // It's common to use NO_MATCH as the code for this case.
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = FavouritesContract.CONTENT_AUTHORITY;
 
-        // add a code for each type of URI you want
-        matcher.addURI(authority, FavouritesContract.FavouriteEntry.TABLE_FAVOURITES, FAVOURITE);
-        matcher.addURI(authority, FavouritesContract.FavouriteEntry.TABLE_FAVOURITES + "/#", FAVOURITE_WITH_ID);
+        // For each type of URI you want to add, create a corresponding code.
+        matcher.addURI(authority,FavouritesContract.PATH_MOVIES, FAVORITES);
+        matcher.addURI(authority, FavouritesContract.PATH_MOVIES + "/#", FAVORITES_ID);
 
         return matcher;
     }
-   @Override
+
+   // static final UriMatcher uriMatcher;
+  /*
+    static {
+        uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+        uriMatcher.addURI(PROVIDER_NAME,"favorites",FAVORITES);
+        uriMatcher.addURI(PROVIDER_NAME, "favorites/#", FAVORITES_ID);
+    }
+    */
+
+    private SQLiteDatabase favDB;
+
+    @Override
     public boolean onCreate() {
-        mOpenHelper = new FavouritesDBHelper(getContext());
-
-        return true;
-    }
-
-
-    @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-        Cursor retCursor;
-        switch(sUriMatcher.match(uri)){
-            // All Flavors selected
-            case FAVOURITE:{
-                retCursor = mOpenHelper.getReadableDatabase().query(
-                        FavouritesContract.FavouriteEntry.TABLE_FAVOURITES,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null,
-                        null,
-                        sortOrder);
-                return retCursor;
-            }
-            // Individual flavor based on Id selected
-            case FAVOURITE_WITH_ID:{
-                retCursor = mOpenHelper.getReadableDatabase().query(
-                        FavouritesContract.FavouriteEntry.TABLE_FAVOURITES,
-                        projection,
-                        FavouritesContract.FavouriteEntry._ID + " = ?",
-                        new String[] {String.valueOf(ContentUris.parseId(uri))},
-                        null,
-                        null,
-                        sortOrder);
-                return retCursor;
-            }
-            default:{
-                // By default, we assume a bad URI
-                throw new UnsupportedOperationException("Unknown uri: " + uri);
-            }
-        }
-    }
-
-
-    @Override
-    public String getType( Uri uri) {
-        return null;
-    }
-
-
-    @Override
-    public Uri insert( Uri uri,  ContentValues values) {
-        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-        Uri returnUri;
-        switch (sUriMatcher.match(uri)) {
-            case FAVOURITE: {
-                long _id = db.insert(FavouritesContract.FavouriteEntry.TABLE_FAVOURITES, null, values);
-                // insert unless it is already contained in the database
-                if (_id > 0) {
-                    returnUri = FavouritesContract.FavouriteEntry.buildFlavorsUri(_id);
-                } else {
-                    throw new android.database.SQLException("Failed to insert row into: " + uri);
-                }
-                break;
-            }
-
-            default: {
-                throw new UnsupportedOperationException("Unknown uri: " + uri);
-
-            }
-        }
-        getContext().getContentResolver().notifyChange(uri, null);
-        return returnUri;
-
-
+        Log.e(TAG,"FavoritesProvider onCreate called" );
+        Context context = getContext();
+        FavouritesDBHelper dbHelper = new FavouritesDBHelper(context);
+        favDB = dbHelper.getWritableDatabase();
+        return (favDB == null) ? false : true;
     }
 
     @Override
-    public int delete( Uri uri, String selection,  String[] selectionArgs) {
-        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+
         final int match = sUriMatcher.match(uri);
-        int numDeleted;
-        switch(match){
-            case FAVOURITE:
-                numDeleted = db.delete(
-                        FavouritesContract.FavouriteEntry.TABLE_FAVOURITES, selection, selectionArgs);
-                // reset _ID
-                db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" +
-                        FavouritesContract.FavouriteEntry.TABLE_FAVOURITES + "'");
-                break;
-            case FAVOURITE_WITH_ID:
-                numDeleted = db.delete(FavouritesContract.FavouriteEntry.TABLE_FAVOURITES,
-                        FavouritesContract.FavouriteEntry.COLUMN_ID + " = ?",
-                        new String[]{String.valueOf(ContentUris.parseId(uri))});
-                // reset _ID
-                db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" +
-                        FavouritesContract.FavouriteEntry.TABLE_FAVOURITES + "'");
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 
+        switch (match) {
+            case FAVORITES:
+                qb.setTables(FavouritesContract.FavouriteEntry.TABLE_FAVOURITES);
+                Log.e(TAG,"query uriMatcher favorites");
                 break;
+            case FAVORITES_ID: {
+                qb.setTables(FavouritesContract.FavouriteEntry.TABLE_FAVOURITES);
+                Log.e(TAG, "query uriMatcher FAVORITES_ID");
+                qb.appendWhere(FavouritesContract.FavouriteEntry.COLUMN_ID + "=" +
+                        uri.getLastPathSegment());
+                break;
+            }
+
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
+        Cursor cursor = qb.query (
+                favDB,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+        cursor.setNotificationUri(getContext().getContentResolver(),CONTENT_URI);
+        return cursor;
 
-        return numDeleted;
+    }
+
+
+    @Override
+    public String getType(Uri uri) {
+        return null;
     }
 
     @Override
-    public int update( Uri uri,  ContentValues contentValues,  String selection,  String[] selectionArgs) {
-        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-        int numUpdated = 0;
+    public Uri insert(Uri uri, ContentValues values) {
+        /** Add a new favorites record */
 
-        if (contentValues == null){
-            throw new IllegalArgumentException("Cannot have null content values");
+        long rowID = favDB.insert(FavouritesContract.FavouriteEntry.TABLE_FAVOURITES, "", values);
+        Log.e(TAG,"FavoritesProvider insert rowID:"+rowID);
+
+        /**
+         * If record is added successfully
+         */
+        if (rowID > 0) {
+            Uri _uri = ContentUris.withAppendedId(CONTENT_URI, rowID);
+            getContext().getContentResolver().notifyChange(_uri, null);
+            return _uri;
         }
+        try {
+            throw new SQLException("Failed to add new record into "+uri);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-        switch(sUriMatcher.match(uri)){
-            case FAVOURITE:{
-                numUpdated = db.update(FavouritesContract.FavouriteEntry.TABLE_FAVOURITES,
-                        contentValues,
+    @Override
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
+
+        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        int count = 0;
+
+        final int match = sUriMatcher.match(uri);
+
+        switch (match) {
+            case FAVORITES:
+                count = favDB.delete(FavouritesContract.FavouriteEntry.TABLE_FAVOURITES, selection, selectionArgs);
+                break;
+            case FAVORITES_ID:
+
+                String id = uri.getPathSegments().get(1);
+                count = favDB.delete(FavouritesContract.FavouriteEntry.TABLE_FAVOURITES,FavouritesContract.FavouriteEntry.COLUMN_ID + " = " + id +
+                        (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown URI " + uri);
+        }
+        getContext().getContentResolver().notifyChange(uri, null);
+        return count;
+    }
+
+    @Override
+    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        final int match = sUriMatcher.match(uri);
+        int rowsUpdated = 0;
+
+        switch (match) {
+            case FAVORITES:
+                rowsUpdated = db.update(
+                        FavouritesContract.FavouriteEntry.TABLE_FAVOURITES,
+                        values,
                         selection,
                         selectionArgs);
                 break;
-            }
-            case FAVOURITE_WITH_ID: {
-                numUpdated = db.update(FavouritesContract.FavouriteEntry.TABLE_FAVOURITES,
-                        contentValues,
-                        FavouritesContract.FavouriteEntry.COLUMN_ID + " = ?",
-                        new String[] {String.valueOf(ContentUris.parseId(uri))});
-                break;
-            }
-            default:{
-                throw new UnsupportedOperationException("Unknown uri: " + uri);
-            }
-        }
 
-        if (numUpdated > 0){
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        if (rowsUpdated != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
-
-        return numUpdated;
+        return rowsUpdated;
     }
 }
