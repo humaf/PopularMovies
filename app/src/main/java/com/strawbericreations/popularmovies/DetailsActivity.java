@@ -62,6 +62,8 @@ public class DetailsActivity extends AppCompatActivity {
     private String rdate;
     private String overview;
     private int averagevote;
+    private String rev;
+    private String trail;
     private Cursor cursor;
 
  @Override
@@ -82,7 +84,7 @@ public class DetailsActivity extends AppCompatActivity {
         voteaverage = (TextView)findViewById(R.id.voteaverage);
         overviews = (TextView)findViewById(R.id.overview);
         trailerText = (TextView)findViewById(R.id.trailerTitle);
-        favButton =(ImageView)findViewById(R.id.fav);
+       favButton =(ImageView)findViewById(R.id.fav);
          id = getIntent().getIntExtra("id",0);
         String identifier = Integer.toString(id);
          title = getIntent().getStringExtra("title");
@@ -90,6 +92,8 @@ public class DetailsActivity extends AppCompatActivity {
          rdate = getIntent().getStringExtra("release_date");
         overview = getIntent().getStringExtra("overview");
         averagevote = getIntent().getIntExtra("vote_average",0);
+        rev = getIntent().getStringExtra("reviews");
+        trail = getIntent().getStringExtra("trailers");
         String avg =Integer.toString(averagevote);
         releasedateText.setText("Release Date");
         release_date.setText(rdate);
@@ -148,14 +152,13 @@ public class DetailsActivity extends AppCompatActivity {
         ContentValues values = new ContentValues();
         values.clear();
         values.put(FavouritesContract.FavouriteEntry.COLUMN_ID, id);
-      //  values.put(PopularMovieContract.MovieEntry.MOVIE_BACKDROP_URI, movie.getTitle());
         values.put(FavouritesContract.FavouriteEntry.COLUMN_TITLE,title);
         values.put(FavouritesContract.FavouriteEntry.COLUMN_IMAGE, image);
         values.put(FavouritesContract.FavouriteEntry.COLUMN_OVERVIEW, overview);
         values.put(FavouritesContract.FavouriteEntry.COLUMN_Average_VOTE, averagevote);
         values.put(FavouritesContract.FavouriteEntry.COLUMN_RELEASE_DATE, rdate);
-      //  values.put(FavouritesContract.FavouriteEntry.COLUMN_REVIEWS, rev);
-       // values.put(PopularMovieContract.MovieEntry.MOVIE_TRAILERS, movie.getMoviePreviews());
+       values.put(FavouritesContract.FavouriteEntry.COLUMN_REVIEWS,rev);
+       values.put(FavouritesContract.FavouriteEntry.COLUMN_TRAILERS, trail);
         Uri check = resolver.insert(uri, values);
         Toast  toast = Toast.makeText(getApplicationContext(),"Added to Favourites",Toast.LENGTH_LONG);
         toast.show();
@@ -168,7 +171,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         long noDeleted = resolver.delete(uri,
                 FavouritesContract.FavouriteEntry.COLUMN_ID+ " = ? ",
-                new String[]{ movie.getId() + "" });
+                new String[]{ id + "" });
 
     }
    /*
@@ -197,7 +200,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     private void toggleFavorites(){
         boolean inFavorites = checkFavorites();
-      //  ImageButton addToFav = (ImageButton) rootView.findViewById(R.id.add_to_fav_view);
+   //    ImageButton addToFav = (ImageButton) rootView.findViewById(R.id.fav);
 
         if(inFavorites){
             favButton.setImageResource(R.drawable.yellow_star);

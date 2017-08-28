@@ -15,7 +15,7 @@ public class FavouritesDBHelper extends SQLiteOpenHelper {
 
     //name & version
     private static final String DATABASE_NAME = "favourites.db";
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 13;
 
     public FavouritesDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -30,11 +30,11 @@ public class FavouritesDBHelper extends SQLiteOpenHelper {
                 FavouritesContract.FavouriteEntry.COLUMN_IMAGE +
                 " TEXT , " +
                 FavouritesContract.FavouriteEntry.COLUMN_OVERVIEW +
-                "TEXT , " +
+                " TEXT , " +
                 FavouritesContract.FavouriteEntry.COLUMN_Average_VOTE +
                 " INTEGER NOT NULL," +
                 FavouritesContract.FavouriteEntry.COLUMN_RELEASE_DATE +
-                "TEXT );" ;
+                " TEXT );" ;
 
         db.execSQL(SQL_CREATE_FAVOURITE_MOVIE_TABLE);
 
@@ -49,7 +49,6 @@ public class FavouritesDBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + FavouritesContract.FavouriteEntry.TABLE_FAVOURITES);
        db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" +
                 FavouritesContract.FavouriteEntry.TABLE_FAVOURITES+ "'");
-
         // re-create database
         onCreate(db);
 

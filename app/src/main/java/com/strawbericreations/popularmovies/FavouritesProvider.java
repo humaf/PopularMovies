@@ -139,7 +139,7 @@ public class FavouritesProvider extends ContentProvider {
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
 
-        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        final SQLiteDatabase db = favDB;
         int count = 0;
 
         final int match = sUriMatcher.match(uri);

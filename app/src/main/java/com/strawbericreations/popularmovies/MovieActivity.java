@@ -52,9 +52,7 @@ public class MovieActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 //Get item at position
                 Movie item = (Movie) parent.getItemAtPosition(position);
-
                 //    mov.add(item);
-
                 Intent intent = new Intent(MovieActivity.this, DetailsActivity.class);
 
                 //Pass the image title and url to DetailsActivity
@@ -63,7 +61,11 @@ public class MovieActivity extends AppCompatActivity {
                         .putExtra("release_date", item.getRelease_date())
                         .putExtra("vote_average", item.getVote_average())
                         .putExtra("id", item.getId())
-                        .putExtra("overview", item.getOverview());
+                        .putExtra("overview", item.getOverview())
+                        .putExtra("reviews",item.getReviews())
+                        .putExtra("trailers",item.getTrailers())
+                ;
+
                 //Start details activity
                 startActivity(intent);
             }
@@ -102,12 +104,10 @@ public class MovieActivity extends AppCompatActivity {
                 tasktop.execute(Constants.API_URL_TOP + Constants.API_KEY);
                 return true;
             case R.id.action_sort_by_favourite:
-               // FavouriteDownloads taskfav = new FavouriteDownloads(mMovieAdapter, getContentResolver());
-                //taskfav.execute();
-                getFavourites();
-
+                FavouritesDownloads taskfav = new FavouritesDownloads();
+              taskfav.execute();
+               // getFavourites();
                 return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -126,7 +126,7 @@ public class MovieActivity extends AppCompatActivity {
         }
         return resultValue;
     }
-
+/*
     private void getFavourites(){
 
 
@@ -164,7 +164,7 @@ public class MovieActivity extends AppCompatActivity {
 
         }
 
-
+*/
     public class MovieDownloads extends AsyncTask<String, Void, ArrayList<Movie>> {
 
         private ArrayList<Movie> movieList;
@@ -247,27 +247,55 @@ public class MovieActivity extends AppCompatActivity {
         }
     }
 
+
+    public class FavouritesDownloads extends AsyncTask<String, Void, ArrayList<Movie>> {
+        private ArrayList<Movie> movies;
+
+        @Override
+        protected ArrayList<Movie> doInBackground(String... params) {
+
+            Uri uri = FavouritesContract.FavouriteEntry.CONTENT_URI;
+            ContentResolver resolver = getApplicationContext().getContentResolver();
+            Cursor cursor = null;
+
+            try {
+                movies = new ArrayList<Movie>();
+                cursor = resolver.query(uri, null, null, null, null);
+
+                // clear movies
+                movies.clear();
+
+                if (cursor.moveToFirst()) {
+                    do {
+                        /*
+                        Movie movie = new Movie(cursor.getInt(1), cursor.getString(3),
+                                cursor.getString(4), cursor.getString(5), cursor.getInt(2),
+                                cursor.getString(5));
+                       movie.setReviews(cursor.getString(7));
+                        movie.setTrailers(cursor.getString(8));
+*/
+                        Movie movie = new Movie(cursor.getInt(0), cursor.getString(1),
+                                cursor.getString(2), cursor.getString(3), cursor.getInt(4),
+                                cursor.getString(5));
+                        movie.setReviews(cursor.getString(6));
+                        movie.setTrailers(cursor.getString(7));
+                        movies.add(movie);
+                    } while (cursor.moveToNext());
+                }
+
+            } finally {
+
+                if (cursor != null)
+                    cursor.close();
+            }
+            return movies;
+        }
+        @Override
+        protected void onPostExecute(ArrayList<Movie> result) {
+            mMovieAdapter = new MovieAdapter(getApplicationContext(), R.layout.grid_item, result);
+            mGridView.setAdapter(mMovieAdapter);
+            Log.i("checking data", result.toString());
+        }
+    }
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
