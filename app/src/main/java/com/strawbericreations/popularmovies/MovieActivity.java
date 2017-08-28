@@ -61,12 +61,8 @@ public class MovieActivity extends AppCompatActivity {
                         .putExtra("release_date", item.getRelease_date())
                         .putExtra("vote_average", item.getVote_average())
                         .putExtra("id", item.getId())
-                        .putExtra("overview", item.getOverview())
-                        .putExtra("reviews",item.getReviews())
-                        .putExtra("trailers",item.getTrailers())
-                ;
-
-                //Start details activity
+                        .putExtra("overview", item.getOverview());
+            //Start details activity
                 startActivity(intent);
             }
         });
@@ -277,8 +273,8 @@ public class MovieActivity extends AppCompatActivity {
                         Movie movie = new Movie(cursor.getInt(0), cursor.getString(1),
                                 cursor.getString(2), cursor.getString(3), cursor.getInt(4),
                                 cursor.getString(5));
-                        movie.setReviews(cursor.getString(6));
-                        movie.setTrailers(cursor.getString(7));
+                    //    movie.setReviews(cursor.getString(6));
+                      //  movie.setTrailers(cursor.getString(7));
                         movies.add(movie);
                     } while (cursor.moveToNext());
                 }

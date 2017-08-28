@@ -157,8 +157,8 @@ public class DetailsActivity extends AppCompatActivity {
         values.put(FavouritesContract.FavouriteEntry.COLUMN_OVERVIEW, overview);
         values.put(FavouritesContract.FavouriteEntry.COLUMN_Average_VOTE, averagevote);
         values.put(FavouritesContract.FavouriteEntry.COLUMN_RELEASE_DATE, rdate);
-       values.put(FavouritesContract.FavouriteEntry.COLUMN_REVIEWS,rev);
-       values.put(FavouritesContract.FavouriteEntry.COLUMN_TRAILERS, trail);
+     //  values.put(FavouritesContract.FavouriteEntry.COLUMN_REVIEWS,rev);
+     //  values.put(FavouritesContract.FavouriteEntry.COLUMN_TRAILERS, trail);
         Uri check = resolver.insert(uri, values);
         Toast  toast = Toast.makeText(getApplicationContext(),"Added to Favourites",Toast.LENGTH_LONG);
         toast.show();
