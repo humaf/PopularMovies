@@ -1,5 +1,10 @@
 # Popular Movies
-This is the second app for Udacity's Android Developer Nanodegree.I built this application from scratch,some of the things I used for this app are **Recycler Views**,**Content Providers** and also **Picasso**.
+This is the second app for Udacity's Android Developer Nanodegree.
+I built this application from scratch,some of the things I used for this app are 
+* Recycler Views.
+* Content Providers. 
+* Picasso.
+* Movie DB API.
 
 ## Features
 
