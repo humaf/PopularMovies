@@ -6,7 +6,7 @@ I built this application from scratch,some of the things I used for this app are
 * Picasso.
 * Movie DB API.
 
-## Challenges
+## Challenge
 
 Some of the Challenges I faced during this project was working with Recycler Views , Adapters and content providers.I had to dig a lot into documentaion and sample examples to understand and make it working.
 
