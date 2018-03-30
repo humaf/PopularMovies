@@ -24,6 +24,10 @@ Some of the Challenges I faced during this project was working with Recycler Vie
 
 I had to dig in a lot into documentaion and sample examples to understand and make it working.
 
+## Android Developer Nanodegree
+
+![nano](https://user-images.githubusercontent.com/16161998/38155684-d812c34c-342d-11e8-8c81-33aa240a899b.png)
+
 ## Features
 
 This app has the following features:
