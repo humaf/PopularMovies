@@ -14,13 +14,14 @@ used for this app are
 ## Getting Started
 This app uses the Movie DB API.You need to have an API key in order to run the app.You can create your own API key at 
 
-https://www.themoviedb.org/account/signup?language=en-EN .Once you get the API key you need to set it in the buil.gradle(app) file.
+https://www.themoviedb.org/account/signup?language=en-EN .
 
+Once you get the API key you need to set it in the buil.gradle(app) file.
 
-
-## Challenge
+## Challenges
 
 Some of the Challenges I faced during this project was working with Recycler Views , Adapters and content providers.
+
 I had to dig in a lot into documentaion and sample examples to understand and make it working.
 
 ## Features
