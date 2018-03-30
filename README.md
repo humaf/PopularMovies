@@ -1,14 +1,28 @@
 # Popular Movies
-This is the second app for Udacity's Android Developer Nanodegree.
-I built this application from scratch,some of the things I used for this app are 
+This is the second app for Udacity's Android Developer Nanodegree.I built this application from scratch,some of the things I 
+
+used for this app are 
+
 * Recycler Views.
+
 * Content Providers. 
+
 * Picasso.
+
 * Movie DB API.
+
+## Getting Started
+This app uses the Movie DB API.You need to have an API key in order to run the app.You can create your own API key at 
+
+https://www.themoviedb.org/account/signup?language=en-EN .Once you get the API key you need to set it in the buil.gradle(app) 
+
+file.
 
 ## Challenge
 
-Some of the Challenges I faced during this project was working with Recycler Views , Adapters and content providers.I had to dig a lot into documentaion and sample examples to understand and make it working.
+Some of the Challenges I faced during this project was working with Recycler Views , Adapters and content providers.I had to dig
+
+a lot into documentaion and sample examples to understand and make it working.
 
 ## Features
 
